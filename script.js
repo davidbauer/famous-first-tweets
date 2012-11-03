@@ -6,13 +6,17 @@ function findTweet() {
 
 // store username given via input
 function findUser() {
-    var myUser = document.tweetfinder.user.value;
-    console.log(myUser); //test
-    thetweet.innerHTML = "You entered username: " + myUser; //test
+    var myUser
+    if (document.tweetfinder.user.value[0] == "@") {
+		myUser = document.tweetfinder.user.value.substring(1,20); //get rid of the @
+    }
+    else {myUser = document.tweetfinder.user.value};
+    thetweet.innerHTML = "You entered username: " + myUser + ". More to come. This tool is not finished yet."; //test
     return myUser
 }
 
 //call info about username via twitter api
+
 
 //extract relevant data to get to first tweet of username
 
@@ -22,7 +26,7 @@ function findUser() {
 function generateEmbed() {
 	
 	
-	tweet = "";
+	var tweet = "";
 	return tweet
 }
 
@@ -33,7 +37,7 @@ function displayTweet() {
 }
 
 //API testground
-$(document).ready(function() {
+/* $(document).ready(function() {
 	$.getJSON('http://search.twitter.com/search.json?q=davidbauer&callback=?', function(data) {
 		var data = data.results;
 		var html = "<ul>";	
@@ -45,3 +49,4 @@ $(document).ready(function() {
     	$('#twitterapi').html(html);
 	});
 });
+*/
