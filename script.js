@@ -11,8 +11,13 @@ function findUser() {
 		myUser = document.tweetfinder.user.value.substring(1,20); //get rid of the @
     }
     else {myUser = document.tweetfinder.user.value};
+    if (myUser.length > 16) {
+	    thetweet.innerHTML = "This doesn't seem to be a username. Too long." // apply length limit
+    }
+    else {
     thetweet.innerHTML = "You entered username: " + myUser + ". More to come. This tool is not finished yet."; //test
     return myUser
+    }
 }
 
 //call info about username via twitter api
