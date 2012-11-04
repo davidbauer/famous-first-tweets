@@ -2,6 +2,7 @@
 function findTweet() { 
 	findUser();
 	checkUser();
+	getId ();
 }
 
 
@@ -26,12 +27,16 @@ function findUser() {
 function checkUser(myUser) {
 $(document).ready(function() {
 	$.getJSON('https://api.twitter.com/1/users/show.json?screen_name=' + myUser + '&include_entities=true&callback=?', function(data) {
-		var created = data.created_at;
-		var name = data.name;
-		var username = data.screen_name;
 		var html = "";
-		html += "Checked Twitter API for @" + username + "(" + name + "). This account was created on " + created; // test
+		if (false) {html += "Twitter doesn't know such a username. Try another one.";} // add condition for Twitter returns error
+		else {
+			var created = data.created_at;
+			var name = data.name;
+			var username = data.screen_name;	
+			html += "Checked Twitter API for @" + username + "(" + name + "). This account was created on " + created; // test
+		}
     	$('.twitterapi').html(html); // test
+    	
 	});
 });
 }
@@ -42,6 +47,9 @@ $(document).ready(function() {
 //TODO extract relevant data to get to first tweet of username
 
 //TODO get ID of first tweet
+
+
+
 
 //TODO create oEmbed of first tweet via ID
 /* function generateEmbed() {
