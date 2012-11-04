@@ -1,12 +1,13 @@
 // from click to result
 function findTweet() { 
 	findUser();
+	checkUser();
 }
 
 
 // store username given via input
 function findUser() {
-    var myUser
+    var myUser;
     if (document.tweetfinder.user.value[0] == "@") {
 		myUser = document.tweetfinder.user.value.substring(1,20); //get rid of the @
     }
@@ -15,43 +16,58 @@ function findUser() {
 	    thetweet.innerHTML = "This doesn't seem to be a username. Too long." // apply length limit
     }
     else {
-    thetweet.innerHTML = "You entered username: " + myUser + ". More to come. This tool is not finished yet."; //test
-    return myUser
+    	thetweet.innerHTML = "You entered username: " + myUser + "."; //test
+    	return myUser;
     }
+    
 }
 
-//call info about username via twitter api
+//TODO call info about username via twitter api
+function checkUser(myUser) {
+$(document).ready(function() {
+	$.getJSON('https://api.twitter.com/1/users/show.json?screen_name=' + myUser + '&include_entities=true&callback=?', function(data) {
+		var created = data.created_at;
+		var name = data.name;
+		var username = data.screen_name;
+		var html = "";
+		html += "Checked Twitter API for @" + username + "(" + name + "). This account was created on " + created; // test
+    	$('.twitterapi').html(html); // test
+	});
+});
+}
 
 
-//extract relevant data to get to first tweet of username
+		// thetweet.innerHTML = "Sorry, no such username found. Please try another one." // error msg if twitter returns error
 
-//get ID of first tweet
+//TODO extract relevant data to get to first tweet of username
 
-//create oEmbed of first tweet via ID
-function generateEmbed() {
-	
-	
+//TODO get ID of first tweet
+
+//TODO create oEmbed of first tweet via ID
+/* function generateEmbed() {
 	var tweet = "";
-	return tweet
-}
+	
+	
+	return tweet;
 
+}
+*/
 
 //send embed code of first tweet back to html
-function displayTweet() {
+/*function displayTweet() {
 	thetweet.innerHTML = tweet;
+
 }
+*/
 
 //API testground
 /* $(document).ready(function() {
-	$.getJSON('http://search.twitter.com/search.json?q=davidbauer&callback=?', function(data) {
-		var data = data.results;
+	$.getJSON('https://api.twitter.com/1/users/show.json?screen_name=davidbauer&include_entities=true&callback=?', function(data) {
 		var html = "<ul>";	
-		for(var i=0; i<data.length; i++) {
-	    	html += "<li><a href='http://twitter.com/" + data[i].from_user + "'>@" 
-                      + data[i].from_user + "</a>: " + data[i].text + "</li>";
-		}
+	    html += data.created_at;
 		html += "</ul>"
-    	$('#twitterapi').html(html);
+    	$('.twitterapi').html(html);
 	});
 });
 */
+
