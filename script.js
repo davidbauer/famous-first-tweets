@@ -37,16 +37,16 @@ function checkUser(myUser) {
 	$.getJSON('https://api.twitter.com/1/users/show.json?screen_name=' + myUser + '&include_entities=true&callback=?', function(data) {
 		var html = "";
 
-		if (false) { 
+		if (false) { // TODO: add condition for Twitter returns error
 			html += "Twitter doesn't know such a username. Try another one.";
-		} // add condition for Twitter returns error
+		} 
 		else {
 			var created = data.created_at;
 			var name = data.name;
 			var username = data.screen_name;
 			var followersNumber = data.followers_count;
 			var tweetsNumber = data.statuses_count;	
-			html += name + " (@" + username + ") joined Twitter on " + created + ". S(he) currently has <i>" + followersNumber + " followers</i> and has published a total number of <i>" + tweetsNumber + " tweets</i>."; // test
+			html += name + " (@" + username + ") joined Twitter on " + created + ". (S)he currently has <i>" + followersNumber + " followers</i> and has published a total number of <i>" + tweetsNumber + " tweets</i>."; // test
 
 			$('.twitterapi').html(html); // test
 
@@ -55,7 +55,7 @@ function checkUser(myUser) {
 	});
 }
 
-//TODO check if user has more than 3200 tweets which makes first one inaccessible
+//check if user has more than 3200 tweets which makes first one inaccessible
 function checkTweetsNumber(tweetsNumber) {
 	if (tweetsNumber > 3200) {
 		html += "Bummer. @" + username + " has published more than 3200 fweets. This means, Twitter can't find the first tweet.";
