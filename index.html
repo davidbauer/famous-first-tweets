@@ -10,18 +10,24 @@
 // work in progress
 <h2>Famous First Tweets</h2>
 <strong>Enter username</strong>
-        <div id="searchform">
-        <form name="tweetfinder">
-            <input type="text" id="user" name="username" autofocus="autofocus" class="searchbox"><br/> <!-- listener needed for enter key pressed -->
-            <div class ="suggestions">Try one of these: Barack Obama, Lady Gaga, Rupert Murdoch, Jack Dorsey.</div>
-            <input type="button" value="Find first tweet" onclick="findTweet()">
-        </form>
-        <span style="text-decoration:underline;">Testing & Bugfixing</span>
-<div id="thetweet"></div>
-<div class="twitterapi"></div>        
-</div>
+<div>
+	<form id="searchform" name="tweetfinder">
+    <input type="text" id="user" name="username" autofocus="autofocus" class="searchbox" required><br/>
+    <div class ="suggestions">Try one of these: Barack Obama, Lady Gaga, Rupert Murdoch, Jack Dorsey.</div>
+    <input type="submit" value="Find first tweet">
+	</form>
 
-        <p id="footnote">This is just a stupid little project by <a href="http://www.twitter.com/davidbauer">David Bauer</a> to document that I'm somewhat progressing in my #Codeyear</p>
+  <span style="text-decoration:underline;">Testing & Bugfixing</span>
+
+  <p id="theusername"></p>
+
+	<p id="thetweet"></p>
+
+	<p class="twitterapi"></p>
+</div>
+	<p id="footnote">
+		This is just a stupid little project by <a href="http://www.twitter.com/davidbauer">David Bauer</a> to document that I'm somewhat progressing in my #Codeyear
+	</p>
 </div> <!-- wrapper -->
 </body>
 </html>
