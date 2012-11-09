@@ -84,8 +84,6 @@ function getFirstTweet(myUser) {
 function generateEmbed(tweetId) {
 	$.getJSON('https://api.twitter.com/1/statuses/oembed.json?id=' + tweetId + '&callback=?', function(embed) {
 		html = embed.html;
-		console.log(embed);
-		console.log(html);
 
     $('#thetweetembed').html(html); // test
 	});
