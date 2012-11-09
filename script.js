@@ -9,6 +9,10 @@ $(function() {
 		var myUser = findUser();
 		checkUser(myUser);
 		getFirstTweet(myUser);
+		
+		// Embed the tweet!
+		var tweetId = getFirstTweet(myUser);
+		generateEmbed(tweetId);
 	});
 });
 
@@ -37,7 +41,7 @@ function checkUser(myUser) {
 	$.getJSON('https://api.twitter.com/1/users/show.json?screen_name=' + myUser + '&include_entities=true&callback=?', function(data) {
 		var html = "";
 
-		if (false) { // TODO: add condition for Twitter returns error
+		if (false) { // TODO: add condition for if Twitter returns error
 			html += "Twitter doesn't know such a username. Try another one.";
 		} 
 		else {
@@ -55,15 +59,15 @@ function checkUser(myUser) {
 	});
 }
 
-//check if user has more than 3200 tweets which makes first one inaccessible
+//check if user has more than 3200 tweets which makes first one inaccessible (only true via search_timeline)
 function checkTweetsNumber(tweetsNumber) {
 	if (tweetsNumber > 3200) {
-		html += "Bummer. @" + username + " has published more than 3200 fweets. This means, Twitter can't find the first tweet.";
-	}
+		html += "Bummer. @" + username + " has published more than 3200 tweets. This means, Twitter can't find the first tweet.";
+	};
 }
 
 
-//TODO get ID of first tweet
+//TODO get ID of first tweet <- currently only goes back 200 tweets
 function getFirstTweet(myUser) {
 	$.getJSON('https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=' + myUser + '&since_id=1&count=200&callback=?', function(tweetdata) {
 		var pos = tweetdata.length - 1;
@@ -73,23 +77,16 @@ function getFirstTweet(myUser) {
 		html = "Checked Twitter API: Tweet with ID " + tweetId + " says: " + tweetText; // test
 
     $('#thetweet').html(html); // test
+    	return tweetId;
 	});
 }
 
 
-//TODO create oEmbed of first tweet via ID
-/* function generateEmbed() {
-	var tweet = "";
-	
-	
-	return tweet;
+//create oEmbed of first tweet via ID <- doesn't work correctly yet
+function generateEmbed(tweetId) {
+	$.getJSON('https://api.twitter.com/1/statuses/oembed.json?id=' + tweetId + '&callback=?', function(embed) {
+		html = embed.html;
 
+    $('#thetweetembed').html(html); // test
+	});
 }
-*/
-
-//send embed code of first tweet back to html
-/*function displayTweet() {
-	thetweet.innerHTML = tweet;
-
-}
-*/
