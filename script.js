@@ -8,11 +8,9 @@ $(function() {
 		// Find the tweet!
 		var myUser = findUser();
 		checkUser(myUser);
-		getFirstTweet(myUser);
 		
 		// Embed the tweet!
-		var tweetId = getFirstTweet(myUser);
-		generateEmbed(tweetId);
+		getFirstTweet(myUser);
 	});
 });
 
@@ -45,12 +43,13 @@ function checkUser(myUser) {
 			html += "Twitter doesn't know such a username. Try another one.";
 		} 
 		else {
-			var created = data.created_at;
+			var created = new Date(data.created_at);
 			var name = data.name;
 			var username = data.screen_name;
 			var followersNumber = data.followers_count;
 			var tweetsNumber = data.statuses_count;	
-			html += name + " (@" + username + ") joined Twitter on " + created + ". (S)he currently has <i>" + followersNumber + " followers</i> and has published a total number of <i>" + tweetsNumber + " tweets</i>."; // test
+
+			html += name + " (@" + username + ") joined Twitter on " + created.toDateString() + ". " + name.split(' ')[0] + " currently has <i>" + followersNumber + " followers</i> and has published a total number of <i>" + tweetsNumber + " tweets</i>."; // test
 
 			$('.twitterapi').html(html); // test
 
@@ -74,10 +73,9 @@ function getFirstTweet(myUser) {
 		var tweetId = tweetdata[pos].id_str;
 		var tweetText = tweetdata[pos].text;
 
-		html = "Checked Twitter API: Tweet with ID " + tweetId + " says: " + tweetText; // test
-
-    $('#thetweet').html(html); // test
-    	return tweetId;
+		//html = "Checked Twitter API: Tweet with ID " + tweetId + " says: " + tweetText; // test
+    //$('#thetweet').html(html); // test
+    generateEmbed(tweetId);
 	});
 }
 
@@ -86,6 +84,8 @@ function getFirstTweet(myUser) {
 function generateEmbed(tweetId) {
 	$.getJSON('https://api.twitter.com/1/statuses/oembed.json?id=' + tweetId + '&callback=?', function(embed) {
 		html = embed.html;
+		console.log(embed);
+		console.log(html);
 
     $('#thetweetembed').html(html); // test
 	});
