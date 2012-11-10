@@ -26,10 +26,9 @@ function findUser() {
 
     // Validate length of username
     if (myUser.length > 16) {
-	    $('#theusername').html("This doesn't seem to be a username. Too long."); // apply length limit
+	    $('#error').html("This doesn't seem to be a username. Too long.");
     }
     else {
-    	$('#theusername').html("You entered username: " + myUser + "."); //test
     	return myUser;
     }
 }
@@ -51,7 +50,7 @@ function checkUser(myUser) {
 
 			html += name + " (@" + username + ") joined Twitter on " + created.toDateString() + ". " + name.split(' ')[0] + " currently has <i>" + followersNumber + " followers</i> and has published a total number of <i>" + tweetsNumber + " tweets</i>."; // test
 
-			$('.twitterapi').html(html); // test
+			$('.userinfo').html(html); // test
 
 	  	checkTweetsNumber(tweetsNumber); // check if tweetsNumber > 3200
 		}
@@ -80,11 +79,11 @@ function getFirstTweet(myUser) {
 }
 
 
-//create oEmbed of first tweet via ID <- doesn't work correctly yet
+//create oEmbed of first tweet via ID
 function generateEmbed(tweetId) {
 	$.getJSON('https://api.twitter.com/1/statuses/oembed.json?id=' + tweetId + '&callback=?', function(embed) {
 		html = embed.html;
 
-    $('#thetweetembed').html(html); // test
+    $('#thetweetembed').html(html);
 	});
 }
