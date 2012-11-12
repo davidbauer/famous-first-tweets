@@ -14,6 +14,27 @@ $(function() {
 	});
 });
 
+$(function() {
+	$('.linkinput').click (function(e) {
+		
+		// Find the tweet!
+		$('.searchbox').val("barackobama");
+		
+		// Stop the form from sending and reloading the page
+		e.preventDefault();
+		
+		// Find the tweet!
+		var myUser = findUser();
+		checkUser(myUser);
+		
+		// Embed the tweet!
+		getFirstTweet(myUser);
+
+		
+	});
+});
+
+
 // store username given via input
 function findUser() {
     var myUser;
@@ -25,7 +46,7 @@ function findUser() {
     else { myUser = document.tweetfinder.user.value };
 
     // Validate length of username
-    if (myUser.length > 16) {
+    if (myUser.length > 16) { // TODO: if true, return error msg and don't continue
 	    $('#error').html("This doesn't seem to be a username. Too long.");
     }
     else {
@@ -38,7 +59,7 @@ function checkUser(myUser) {
 	$.getJSON('https://api.twitter.com/1/users/show.json?screen_name=' + myUser + '&include_entities=true&callback=?', function(data) {
 		var html = "";
 
-		if (false) { // TODO: add condition for if Twitter returns error
+		if (false) { // TODO: add condition for if Twitter returns error, if true return error msg and don't continue
 			html += "Twitter doesn't know such a username. Try another one.";
 		} 
 		else {
