@@ -8,9 +8,6 @@ $(function() {
 		// Find the tweet!
 		var myUser = findUser();
 		checkUser(myUser);
-		
-		// Embed the tweet!
-		getFirstTweet(myUser);
 	});
 });
 
@@ -21,32 +18,27 @@ $(function() {
 		// Get the user from the link
 		var myUser = $(this).attr('data-user');
 		checkUser(myUser);
-		
-		// Embed the tweet!
-		getFirstTweet(myUser);
-
-		
 	});
 });
 
 
 // store username given via input
 function findUser() {
-    var myUser;
+		var myUser;
 
-    // Get the username value from the form and cleanup the @ if needed
-    if (document.tweetfinder.user.value[0] == "@") {
+		// Get the username value from the form and cleanup the @ if needed
+		if (document.tweetfinder.user.value[0] == "@") {
 			myUser = document.tweetfinder.user.value.substring(1,20); //get rid of the @
-    }
-    else { myUser = document.tweetfinder.user.value };
+		}
+		else { myUser = document.tweetfinder.user.value };
 
-    // Validate length of username
-    if (myUser.length > 16) { // TODO: if true, return error msg and don't continue
-	    $('#error').html("This doesn't seem to be a username. Too long.");
-    }
-    else {
-    	return myUser;
-    }
+		// Validate length of username
+		if (myUser.length > 16) { // TODO: if true, return error msg and don't continue
+			$('#error').html("This doesn't seem to be a username. Too long.");
+		}
+		else {
+			return myUser;
+		}
 }
 
 // call info about username via twitter api
@@ -68,7 +60,9 @@ function checkUser(myUser) {
 
 			$('.userinfo').html(html); // test
 
-	  	checkTweetsNumber(tweetsNumber); // check if tweetsNumber > 3200
+			checkTweetsNumber(tweetsNumber); // check if tweetsNumber > 3200
+
+			getFirstTweet(myUser, data.status.id);
 		}
 	});
 }
@@ -80,17 +74,40 @@ function checkTweetsNumber(tweetsNumber) {
 	};
 }
 
+// Declare a variable to hold the max ID.
+var currentMaxId;
+var loopCount = 0;
 
 //TODO get ID of first tweet <- currently only goes back 200 tweets
-function getFirstTweet(myUser) {
-	$.getJSON('https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=' + myUser + '&since_id=1&count=200&callback=?', function(tweetdata) {
-		var pos = tweetdata.length - 1;
-		var tweetId = tweetdata[pos].id_str;
-		var tweetText = tweetdata[pos].text;
+function getFirstTweet(myUser, maxID) {
+	// Check that we are not going to hit the twitter rate limit.
+	loopCount += 1;
+	if (loopCount == 147) {
+		// We hit the limit. Show a message and load the oldest tweet we retrieved.
+		$('#error').html('We can\'t go right back to the beginning. But here is a pretty old one');
 
-		//html = "Checked Twitter API: Tweet with ID " + tweetId + " says: " + tweetText; // test
-    //$('#thetweet').html(html); // test
-    generateEmbed(tweetId);
+		if (currentMaxId != undefined) {
+			generateEmbed(currentMaxId);
+		}
+
+		return;
+	}
+
+	$.getJSON('https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=false&screen_name=' + myUser + '&since_id=1&max_id=' + maxID + '&count=200&callback=?', function(tweetdata) {
+		// If the length is 0 we have gone back as far as possible.
+		// Generate the embedded tweet using the currentMaxId.
+		if (tweetdata.length == 1) {
+			generateEmbed(currentMaxId);
+		} else {
+			// There may be more tweets so lets keep looping.
+			// Save the oldest tweet in this batch by updating the currentMaxId variable
+			// with it's ID.
+			var pos = tweetdata.length - 1;
+			currentMaxId = tweetdata[pos].id_str;
+
+			console.log("Going Again: " + currentMaxId);
+			getFirstTweet(myUser, currentMaxId);
+		}
 	});
 }
 
@@ -100,6 +117,6 @@ function generateEmbed(tweetId) {
 	$.getJSON('https://api.twitter.com/1/statuses/oembed.json?id=' + tweetId + '&callback=?', function(embed) {
 		html = embed.html;
 
-    $('#thetweetembed').html(html);
+		$('#thetweetembed').html(html);
 	});
 }
