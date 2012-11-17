@@ -58,20 +58,17 @@ function checkUser(myUser) {
 
 			html += name + " (@" + username + ") joined Twitter on " + created.toDateString() + ". " + name.split(' ')[0] + " currently has <i>" + followersNumber + " followers</i> and has published a total number of <i>" + tweetsNumber + " tweets</i>."; // test
 
+			// Check if user has more than 3200 tweets which makes first one 
+			// inaccessible (only true via search_timeline)
+			if (tweetsNumber > 3200) {
+				html += "<p>Bummer. @" + username + " has published more than 3200 tweets. This means, Twitter can't find the first tweet :(</p>";
+			} else {
+				getFirstTweet(myUser, data.status.id);
+			}
+
 			$('.userinfo').html(html); // test
-
-			checkTweetsNumber(tweetsNumber); // check if tweetsNumber > 3200
-
-			getFirstTweet(myUser, data.status.id);
 		}
 	});
-}
-
-//check if user has more than 3200 tweets which makes first one inaccessible (only true via search_timeline)
-function checkTweetsNumber(tweetsNumber) {
-	if (tweetsNumber > 3200) {
-		html += "Bummer. @" + username + " has published more than 3200 tweets. This means, Twitter can't find the first tweet.";
-	};
 }
 
 // Declare a variable to hold the max ID.
