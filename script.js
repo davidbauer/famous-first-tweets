@@ -16,15 +16,10 @@ $(function() {
 
 $(function() {
 	$('.linkinput').click (function(e) {
-		
-		// Find the tweet!
-		$('.searchbox').val("barackobama");
-		
-		// Stop the form from sending and reloading the page
 		e.preventDefault();
 		
-		// Find the tweet!
-		var myUser = findUser();
+		// Get the user from the link
+		var myUser = $(this).attr('data-user');
 		checkUser(myUser);
 		
 		// Embed the tweet!
