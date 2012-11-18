@@ -8,10 +8,10 @@ $(function() {
 		$('#thetweetembed').html("");
 		$('.userinfo').html("");
 
-
 		// Find the tweet!
 		var myUser = findUser();
-		checkUser(myUser);
+		if (myUser == "usernameistoolong") {}
+		else {checkUser(myUser);}
 	});
 });
 
@@ -42,6 +42,7 @@ function findUser() {
 		// Validate length of username
 		if (myUser.length > 16) { // TODO: if true, return error msg and don't continue
 			$('#error').html("This doesn't seem to be a username. Too long.");
+			return "usernameistoolong";
 		}
 		else {
 			return myUser;
