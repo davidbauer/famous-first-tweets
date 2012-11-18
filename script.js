@@ -8,50 +8,37 @@ $(function() {
 		// Find the tweet!
 		var myUser = findUser();
 		checkUser(myUser);
-		
-		// Embed the tweet!
-		getFirstTweet(myUser);
 	});
 });
 
 $(function() {
 	$('.linkinput').click (function(e) {
-		
-		// Find the tweet!
-		$('.searchbox').val("barackobama");
-		
-		// Stop the form from sending and reloading the page
 		e.preventDefault();
 		
-		// Find the tweet!
-		var myUser = findUser();
+		// Get the user from the link
+		var myUser = $(this).attr('data-user');
 		checkUser(myUser);
-		
-		// Embed the tweet!
-		getFirstTweet(myUser);
-
-		
 	});
 });
 
 
 // store username given via input
 function findUser() {
-    var myUser;
+		var myUser;
 
-    // Get the username value from the form and cleanup the @ if needed
-    if (document.tweetfinder.user.value[0] == "@") {
+		// Get the username value from the form and cleanup the @ if needed
+		if (document.tweetfinder.user.value[0] == "@") {
 			myUser = document.tweetfinder.user.value.substring(1,20); //get rid of the @
-    }
-    else { myUser = document.tweetfinder.user.value };
+		}
+		else { myUser = document.tweetfinder.user.value };
 
-    // Validate length of username
-    if (myUser.length > 16) { // TODO: if true, return error msg and don't continue
-	    $('#error').html("This doesn't seem to be a username. Too long.");
-    }
-    else {
-    	return myUser;
-    }
+		// Validate length of username
+		if (myUser.length > 16) { // TODO: if true, return error msg and don't continue
+			$('#error').html("This doesn't seem to be a username. Too long.");
+		}
+		else {
+			return myUser;
+		}
 }
 
 // call info about username via twitter api
@@ -71,31 +58,53 @@ function checkUser(myUser) {
 
 			html += name + " (@" + username + ") joined Twitter on " + created.toDateString() + ". " + name.split(' ')[0] + " currently has <i>" + followersNumber + " followers</i> and has published a total number of <i>" + tweetsNumber + " tweets</i>."; // test
 
-			$('.userinfo').html(html); // test
+			// Check if user has more than 3200 tweets which makes first one 
+			// inaccessible (only true via search_timeline)
+			if (tweetsNumber > 3200) {
+				html += "<p>Bummer. @" + username + " has published more than 3200 tweets. This means, Twitter can't find the first tweet :(</p>";
+			} else {
+				getFirstTweet(myUser, data.status.id);
+			}
 
-	  	checkTweetsNumber(tweetsNumber); // check if tweetsNumber > 3200
+			$('.userinfo').html(html); // test
 		}
 	});
 }
 
-//check if user has more than 3200 tweets which makes first one inaccessible (only true via search_timeline)
-function checkTweetsNumber(tweetsNumber) {
-	if (tweetsNumber > 3200) {
-		html += "Bummer. @" + username + " has published more than 3200 tweets. This means, Twitter can't find the first tweet.";
-	};
-}
-
+// Declare a variable to hold the max ID.
+var currentMaxId;
+var loopCount = 0;
 
 //TODO get ID of first tweet <- currently only goes back 200 tweets
-function getFirstTweet(myUser) {
-	$.getJSON('https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=' + myUser + '&since_id=1&count=200&callback=?', function(tweetdata) {
-		var pos = tweetdata.length - 1;
-		var tweetId = tweetdata[pos].id_str;
-		var tweetText = tweetdata[pos].text;
+function getFirstTweet(myUser, maxID) {
+	// Check that we are not going to hit the twitter rate limit.
+	loopCount += 1;
+	if (loopCount == 147) {
+		// We hit the limit. Show a message and load the oldest tweet we retrieved.
+		$('#error').html('We can\'t go right back to the beginning. But here is a pretty old one');
 
-		//html = "Checked Twitter API: Tweet with ID " + tweetId + " says: " + tweetText; // test
-    //$('#thetweet').html(html); // test
-    generateEmbed(tweetId);
+		if (currentMaxId != undefined) {
+			generateEmbed(currentMaxId);
+		}
+
+		return;
+	}
+
+	$.getJSON('https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=false&screen_name=' + myUser + '&since_id=1&max_id=' + maxID + '&count=200&callback=?', function(tweetdata) {
+		// If the length is 0 we have gone back as far as possible.
+		// Generate the embedded tweet using the currentMaxId.
+		if (tweetdata.length == 1) {
+			generateEmbed(currentMaxId);
+		} else {
+			// There may be more tweets so lets keep looping.
+			// Save the oldest tweet in this batch by updating the currentMaxId variable
+			// with it's ID.
+			var pos = tweetdata.length - 1;
+			currentMaxId = tweetdata[pos].id_str;
+
+			console.log("Going Again: " + currentMaxId);
+			getFirstTweet(myUser, currentMaxId);
+		}
 	});
 }
 
@@ -105,6 +114,6 @@ function generateEmbed(tweetId) {
 	$.getJSON('https://api.twitter.com/1/statuses/oembed.json?id=' + tweetId + '&callback=?', function(embed) {
 		html = embed.html;
 
-    $('#thetweetembed').html(html);
+		$('#thetweetembed').html(html);
 	});
 }
