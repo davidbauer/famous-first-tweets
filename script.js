@@ -4,6 +4,10 @@ $(function() {
 	$('#searchform').submit(function(e) {
 		// Stop the form from sending and reloading the page
 		e.preventDefault();
+		$('#error').html("");
+		$('#thetweetembed').html("");
+		$('.userinfo').html("");
+
 
 		// Find the tweet!
 		var myUser = findUser();
@@ -14,6 +18,9 @@ $(function() {
 $(function() {
 	$('.linkinput').click (function(e) {
 		e.preventDefault();
+		$('#error').html("");
+		$('#thetweetembed').html("");
+		$('.userinfo').html("");
 		
 		// Get the user from the link
 		var myUser = $(this).attr('data-user');
@@ -47,7 +54,7 @@ function checkUser(myUser) {
 		var html = "";
 
 		if (false) { // TODO: add condition for if Twitter returns error, if true return error msg and don't continue
-			html += "Twitter doesn't know such a username. Try another one.";
+			$('#error').html("Twitter doesn't know such a username. Try another one.");
 		} 
 		else {
 			var created = new Date(data.created_at);
@@ -59,14 +66,16 @@ function checkUser(myUser) {
 			html += name + " (@" + username + ") joined Twitter on " + created.toDateString() + ". " + name.split(' ')[0] + " currently has <i>" + followersNumber + " followers</i> and has published a total number of <i>" + tweetsNumber + " tweets</i>."; // test
 
 			// Check if user has more than 3200 tweets which makes first one 
-			// inaccessible (only true via search_timeline)
+			// inaccessible (restrictions of search_timeline)
 			if (tweetsNumber > 3200) {
-				html += "<p>Bummer. @" + username + " has published more than 3200 tweets. This means, Twitter can't find the first tweet :(</p>";
+				$('#error').html("<p>Bummer. @" + username + " has published more than 3200 tweets. This means, Twitter can't find the first tweet :(</p>Note to devs: If you know of a way to dig up tweets older than that (we are hitting the limit of search_timeline), please help us out with a <a href='https://github.com/davidbauer/famous-first-tweets/'>pull request on Github</a>.</p>");
 			} else {
 				getFirstTweet(myUser, data.status.id);
+				
 			}
-
-			$('.userinfo').html(html); // test
+			
+			$('.userinfo').html(html);
+			
 		}
 	});
 }
@@ -75,8 +84,9 @@ function checkUser(myUser) {
 var currentMaxId;
 var loopCount = 0;
 
-//TODO get ID of first tweet <- currently only goes back 200 tweets
+//get ID of first tweet
 function getFirstTweet(myUser, maxID) {
+	$('#thetweetembed').html("Looking for the tweet...");
 	// Check that we are not going to hit the twitter rate limit.
 	loopCount += 1;
 	if (loopCount == 147) {
