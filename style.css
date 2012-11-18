@@ -1,7 +1,7 @@
 body {font-family: Georgia, serif; font-size: 16px;}
 body i {background:yellow;}
 #wrapper {width: 500px; margin: 20px auto;padding:10px;}
-#searchform {margin-top:10px;}
+#searchform {margin-top:20px;}
 .searchbox {width: 300px; height:50px; font-size:150%;}
 .suggestions {font-size:12px;font-family: Helvetica, Arial, sans-serif;color: grey;margin:5px 0;}
 #error {border-left: 3px solid rgba(255,0,0,0.61); padding: 0 8px; margin: 10px 0;}
