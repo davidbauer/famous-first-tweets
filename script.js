@@ -91,7 +91,7 @@ function checkUser(myUser) {
 			var followersNumber = data.followers_count;
 			var tweetsNumber = data.statuses_count;	
 
-			html += name + " (@" + username + ") joined Twitter on " + created.toDateString() + ". " + name.split(' ')[0] + " currently has <i>" + followersNumber + " followers</i> and has published a total number of <i>" + tweetsNumber + " tweets</i>."; // test
+			html += name + " (@" + username + ") joined Twitter on " + created.toDateString() + ". " + name.split(' ')[0] + " currently has " + followersNumber + " followers and has published a total number of " + tweetsNumber + " tweets."; // test
 
 			// Check if user has more than 3200 tweets which makes first one 
 			// inaccessible (restrictions of search_timeline)

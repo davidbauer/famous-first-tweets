@@ -7,17 +7,14 @@
 </head>
 <body>
 <div id="wrapper">
-// <a href ="https://github.com/davidbauer/famous-first-tweets">work in progress</a>
 <h2>Famous First Tweets</h2>
 Enter a username to find the very first Tweet this user has published.</strong>
 <div>
-	<form id="searchform" name="tweetfinder" action="http://tageswoche.ch">
+	<form id="searchform" name="tweetfinder">
 		<input type="text" id="user" name="username" autofocus="autofocus" class="searchbox" required><br/>
 		<div class ="suggestions">Try: <a href="#" class="linkinput" data-user="ladygaga">Lady Gaga</a>, <a href="#" class="linkinput" data-user="rupertmurdoch">Rupert Murdoch</a>, <a href="#" class="linkinput" data-user="f_cancellara">Fabian Cancellara</a>, <a href="#" class="linkinput" data-user="twitter">Twitter</a>.</div>
-		<input type="submit" value="Find first tweet">
+		<input type="submit" value="Find first tweet" class="button">
 	</form>
-
-	<span style="text-decoration:underline;">Testing &amp; Bugfixing</span>
 
 	<div id="error"></div>
 
@@ -26,9 +23,11 @@ Enter a username to find the very first Tweet this user has published.</strong>
 	<div id="thetweetembed"></div>
 
 </div>
-	<p id="footnote">
+	<div id="footnote">
 		This is a little project by <a href="https://twitter.com/davidbauer">David Bauer</a> to document that I'm somewhat progressing in my #Codeyear. Big thanks to <a href="https://twitter.com/MattAntWest">Matt West</a> and <a href="https://www.twitter.com/backflip">Thomas Jaggi</a> for helping me with the tricky parts. 
-	</p>
+	</div>
+	<a href="https://twitter.com/davidbauer" class="twitter-follow-button" data-show-count="false" data-dnt="true">Follow @davidbauer</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </div> <!-- wrapper -->
 </body>
 </html>
