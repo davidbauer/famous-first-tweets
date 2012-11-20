@@ -1,6 +1,21 @@
 // Setup an event listener for the form that will execute findTweet()
 // when the form is submitted.
 $(function() {
+	
+	var hash = window.location.hash,
+	    field = document.tweetfinder.user;
+
+	if (hash) {
+		hash = hash.substring(1);
+
+		// Fill field
+		field.value = hash;
+
+		// Do the magic
+		checkUser(hash);
+	}
+	
+	
 	$('#searchform').submit(function(e) {
 		// Stop the form from sending and reloading the page
 		e.preventDefault();
@@ -12,6 +27,8 @@ $(function() {
 		var myUser = findUser();
 		if (myUser == "usernameistoolong") {}
 		else {checkUser(myUser);}
+		// Update URL
+		window.location.hash = myUser;
 	});
 });
 
@@ -25,6 +42,8 @@ $(function() {
 		// Get the user from the link
 		var myUser = $(this).attr('data-user');
 		checkUser(myUser);
+		// Update URL
+		window.location.hash = myUser;
 	});
 });
 
@@ -53,7 +72,6 @@ function findUser() {
 function checkUser(myUser) {
 	$.getJSON('https://api.twitter.com/1/users/show.json?screen_name=' + myUser + '&include_entities=true&callback=?', function(data) {
 		var html = "";
-
 		if (false) { // TODO: add condition for if Twitter returns error, if true return error msg and don't continue
 			$('#error').html("Twitter doesn't know such a username. Try another one.");
 		} 
@@ -127,4 +145,5 @@ function generateEmbed(tweetId) {
 
 		$('#thetweetembed').html(html);
 	});
+	
 }
