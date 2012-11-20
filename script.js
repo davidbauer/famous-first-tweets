@@ -70,11 +70,20 @@ function findUser() {
 
 // call info about username via twitter api
 function checkUser(myUser) {
-	$.getJSON('https://api.twitter.com/1/users/show.json?screen_name=' + myUser + '&include_entities=true&callback=?', function(data) {
-		var html = "";
-		if (false) { // TODO: add condition for if Twitter returns error, if true return error msg and don't continue
-			$('#error').html("Twitter doesn't know such a username. Try another one.");
-		} 
+		$.ajax({
+			url: 'https://api.twitter.com/1/users/show.json', 
+			data: {
+				screen_name: myUser,
+				include_entities: true,
+				suppress_response_codes: true
+				},
+			dataType: 'jsonp',
+			success: function(data) {
+        var html = "";
+
+        if (data.error) {
+            $('#error').html("Twitter doesn't know this username. Try another one.");
+        }
 		else {
 			var created = new Date(data.created_at);
 			var name = data.name;
@@ -96,6 +105,7 @@ function checkUser(myUser) {
 			$('.userinfo').html(html);
 			
 		}
+	}
 	});
 }
 
